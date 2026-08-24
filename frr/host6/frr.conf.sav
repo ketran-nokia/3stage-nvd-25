@@ -1,0 +1,50 @@
+frr version 10.8.0-dev_git20260824
+frr defaults traditional
+hostname host6
+!
+route-map OWN_ROUTES_ONLY permit 10
+ match as-path EMPTY
+exit
+!
+vrf vrf1
+exit-vrf
+!
+vrf vrf2
+exit-vrf
+!
+router bgp 65001 vrf vrf1
+ no bgp ebgp-requires-policy
+ neighbor leafs peer-group
+ neighbor leafs remote-as 64512
+ neighbor 10.1.4.201 peer-group leafs
+ neighbor 10.1.4.202 peer-group leafs
+ !
+ address-family ipv4 unicast
+  network 6.6.6.1/32
+  neighbor leafs route-map OWN_ROUTES_ONLY out
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  advertise-pip
+ exit-address-family
+exit
+!
+router bgp 65001 vrf vrf2
+ no bgp ebgp-requires-policy
+ neighbor leafs peer-group
+ neighbor leafs remote-as 64512
+ neighbor 10.2.4.201 peer-group leafs
+ neighbor 10.2.4.202 peer-group leafs
+ !
+ address-family ipv4 unicast
+  network 6.6.6.2/32
+  neighbor leafs route-map OWN_ROUTES_ONLY out
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  advertise-pip
+ exit-address-family
+exit
+!
+bgp as-path access-list EMPTY seq 5 permit ^$
+!

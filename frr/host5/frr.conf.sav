@@ -1,0 +1,29 @@
+frr version 10.8.0-dev_git20260824
+frr defaults traditional
+hostname host5
+!
+route-map OWN_ROUTES_ONLY permit 10
+ match as-path EMPTY
+exit
+!
+router bgp 65001
+ no bgp ebgp-requires-policy
+ no bgp default ipv4-unicast
+ neighbor leafs-v4 peer-group
+ neighbor leafs-v4 remote-as 64512
+ neighbor leafs-v6 peer-group
+ neighbor leafs-v6 remote-as 64512
+ neighbor 10.1.5.0 peer-group leafs-v4
+ neighbor 10.1.5.2 peer-group leafs-v4
+ neighbor 10.1.5.4 peer-group leafs-v4
+ neighbor 10.1.5.6 peer-group leafs-v4
+ !
+ address-family ipv4 unicast
+  network 5.5.5.5/32
+  neighbor leafs-v4 activate
+  neighbor leafs-v4 route-map OWN_ROUTES_ONLY out
+ exit-address-family
+exit
+!
+bgp as-path access-list EMPTY seq 5 permit ^$
+!
