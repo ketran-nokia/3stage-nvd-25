@@ -24,7 +24,7 @@
 * IP-VRFs with Layer 3 extension over EVPN
   * EVPN-IFL Type 5 GW-IP advertisement and resolution/ECMP
 * Bridged and routed VXLAN interfaces
-* Shared services (route leaking via inter-instance policies and/or shared route-targets)
+* Shared services (route leaking via inter-instance policies)
 * All-active/single-active Ethernet segments
   * Default (mod-based), preference-based DF election
     * Preference based only – AC-DF/non-revertive capabilities
