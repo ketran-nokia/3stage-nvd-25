@@ -1,4 +1,3 @@
-# EVPN-VXLAN 
 name: 3-stage-evpn-vxlan-nvd-25
 
 topology:
@@ -85,7 +84,7 @@ topology:
         - ip addr add 10.1.1.11/24 dev bond0.101
         - ip addr add 10.1.2.11/24 dev bond0.102
         - ip addr add 10.2.1.11/24 dev bond0.201
-        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.1.1 dev bond0.101
+        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.1.1 dev bond0.101 nexthop via 10.1.2.1 dev bond0.102
         - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.1.1 dev bond0.201
     host2:
       group: host
@@ -136,8 +135,8 @@ topology:
         - ip addr add 10.1.3.13/24 dev bond0.103
         - ip addr add 10.2.2.13/24 dev bond0.202
         - ip addr add 10.2.3.13/24 dev bond0.203
-        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.1.1 dev bond0.101
-        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.2.1 dev bond0.202
+        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.1.1 dev bond0.101 nexthop via 10.1.3.1 dev bond0.103
+        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.2.1 dev bond0.202 nexthop via 10.2.3.1 dev bond0.203
     host4:
       group: host
       exec:
@@ -152,7 +151,7 @@ topology:
         - ip link set bond0 master vrf2
         - ip link set vrf2 up
         - ip addr add 10.2.2.14/24 dev bond0
-        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.2.1 dev bond0.202
+        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.2.1 dev bond0
     host5:
       group: frr
       exec:
@@ -229,13 +228,13 @@ topology:
         - ip link set eth1.203 master vrf2
         - ip addr add 10.1.3.17/24 dev eth1.103
         - ip addr add 10.2.3.17/24 dev eth1.203
-        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.3.1 dev bond0.103
-        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.3.1 dev bond0.203
+        - ip route add 0.0.0.0/0 vrf vrf1 nexthop via 10.1.3.1 dev eth1.103
+        - ip route add 0.0.0.0/0 vrf vrf2 nexthop via 10.2.3.1 dev eth1.203
     host8:
       group: host
       exec:
         - ip link set eth1 mtu 9000
-        - ip link add vrf-ss type vrf
+        - ip link add vrf-ss type vrf table 100
         - ip link set eth1 master vrf-ss
         - ip link set vrf-ss up
         - ip link set eth1 up
